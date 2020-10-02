@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+
+import textract
+import sys
+
+file_name = sys.argv[1]
+
+try:
+    text = textract.process(file_name)
+except Exception as e:
+    print(e)
+    sys.exit(1)
+
+print(text.decode("utf-8"))
