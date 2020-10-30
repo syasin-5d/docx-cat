@@ -2,13 +2,20 @@
 
 import textract
 import sys
+import magic
+from docx import Document
 
 file_name = sys.argv[1]
 
-try:
-    text = textract.process(file_name)
-except Exception as e:
-    print(e)
-    sys.exit(1)
+DOC_MIME = "application/msword"
+DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
-print(text.decode("utf-8"))
+MIME = magic.from_file(file_name, mime=True)
+
+if MIME == DOC_MIME:
+    text = textract.process(file_name)
+    print(text.decode("utf-8"))
+elif MIME == DOCX_MIME:
+    document = Document(file_name)
+    for p in document.paragraphs:
+        print(p.text)
